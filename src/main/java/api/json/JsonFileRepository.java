@@ -11,6 +11,19 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This API implementation initiates a File {@code json-file-repository.json} in your home directory
+ * and stores {@link Sample}s inside this file. This implementation uses Jackson Json.
+ *
+ * It uses a very basic implementation of java.nio to handle the repository file. This is due to
+ * the fact that file handling is heavily influenced by both File System and Context. Both are
+ * however not important for this basic CRUD api implementation.
+ *
+ * This API class handles the CRUD operations and uses {@link JsonFileHandler} for the I/O operations
+ * on the repository file.
+ *
+ * @author s.totzauer
+ */
 public class JsonFileRepository implements BasicCrud {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -26,31 +39,6 @@ public class JsonFileRepository implements BasicCrud {
         return listSamples(SampleResult.ALL);
     }
 
-    /**
-     * This is the JSON based implementation of the Sample-API. And also the first
-     * API-set to be developed.
-     * <p>
-     * This method will list all Samples found in the text file designated by
-     * {@code filePath}. This API uses Jackson in order to wrap Java objects into
-     * JSON strings and vice versa.
-     *
-     * @param resultType - lists all Samples with the result matching the
-     *                   provided {@code SampleResult}. Further you can list
-     *                   all samples by providing {@code SampleResult.ALL}.
-     * @return An {@code java.lang.ArrayList} containing all matching Samples.
-     */
-
-    // [ST-05.12.19] * @throws FileNotFoundException if the provided {@code
-    // filePath} doesn't yield a file.
-    // ^- Since we would have to check every time we use these API calls that a file
-    // is provided,
-    // a better option seems to be to sanitize File/Path input one time, eg. via
-    // Controller-part of an App
-    // or provide one way for our API to do iot. However since we use static
-    // methods, we would have to be sure
-    // that we instantiate the API first and sanitize the File/Path once. Personally
-    // and currently, I deem this
-    // very context dependant, so I will omit this sanitization this time.
     @Override
     public List<Sample> listSamples(SampleResult resultType) {
         return this.loadSamples();
@@ -125,7 +113,7 @@ public class JsonFileRepository implements BasicCrud {
 
     @Override
     public boolean upsertSample(Sample sample) {
-        return false;
+        throw new UnsupportedOperationException("Upserting not implemented yet.");
     }
 
     @Override

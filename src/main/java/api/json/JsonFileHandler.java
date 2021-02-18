@@ -6,21 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * This class handles the File I/O for the JsonFileRepository Implementation of {@link api.BasicCrud} API.
+ */
 public class JsonFileHandler {
 
     private final Path pathToTargetFile;
 
-    /**
-     * This method is an approach to remove the parameter {@code pathToJsonFile}
-     * from all the other API method signatures to 1) have one place, where the file
-     * name is handled and sanitized, 2) allow to specify which file to use as data
-     * sink. Note that this is mostly a placeholder to showcase the approach.
-     * Actually sanitizing the path String is much more elaborate and
-     * platform-dependent.
-     *
-     * @param pathToFile - the String representation of the Path to the File where
-     *                   our JSON data should be stored.
-     */
     public JsonFileHandler(Path pathToFile) {
 
         if(Files.exists(pathToFile))
