@@ -69,29 +69,6 @@ public class JsonFileRepository implements BasicCrud {
         return this.saveSamples(sampleList);
     }
 
-    private List<Sample> loadSamples() {
-        String json = this.fileHandler.load();
-        List<Sample> listOfSamples = Collections.emptyList();
-        try {
-            listOfSamples = this.objectMapper
-                    .readValue(json, new TypeReference<List<Sample>>() {});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return listOfSamples;
-    }
-
-    private boolean saveSamples(List<Sample> samples) {
-        try {
-            this.fileHandler.save(this.objectMapper.writeValueAsString(samples));
-            return true;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     @Override
     public boolean updateSample(Sample updatedSample) {
         boolean success = false;
@@ -126,11 +103,45 @@ public class JsonFileRepository implements BasicCrud {
 
     @Override
     public Sample retrieve(String uid) {
-        return null;
+        throw new UnsupportedOperationException("Upserting not implemented yet.");
     }
 
     protected void close() {
         this.fileHandler.deleteJsonFile();
     }
 
+    /**
+     * Asks the {@link JsonFileHandler} to load the Json-Repository-File and transforms
+     * the String content into a List of Sample objects
+     * @return A List of Samples from the Json Repository.
+     */
+    private List<Sample> loadSamples() {
+        String json = this.fileHandler.load();
+        List<Sample> listOfSamples = Collections.emptyList();
+        try {
+            listOfSamples = this.objectMapper
+                    .readValue(json, new TypeReference<List<Sample>>() {});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return listOfSamples;
+    }
+
+    /**
+     * Transforms the List of Sample objects into a JSON String and asks the {@link JsonFileHandler}
+     * to write it to the file on disk.
+     *
+     * @param samples The samples you wish to persist
+     * @return true, if the samples were persisted
+     */
+    private boolean saveSamples(List<Sample> samples) {
+        try {
+            this.fileHandler.save(this.objectMapper.writeValueAsString(samples));
+            return true;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
